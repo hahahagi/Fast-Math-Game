@@ -42,6 +42,12 @@ window.tfModel = null; // diekspos global utk debugging
 let labels = ["a", "b", "c", "d"];
 
 async function loadHandsignModel() {
+  const modelStatus = document.getElementById("model-status");
+  if (modelStatus) {
+    modelStatus.textContent = "📦 Memuat model…";
+    modelStatus.style.display = "block";
+  }
+
   try {
     window.tfModel = await tf.loadLayersModel("tfjs_model/model.json");
     console.log(
@@ -51,6 +57,11 @@ async function loadHandsignModel() {
       window.tfModel.inputs[0].shape
     );
 
+    if (modelStatus) {
+      modelStatus.textContent = "✅ Model siap!";
+      setTimeout(() => (modelStatus.style.display = "none"), 800);
+    }
+
     // (optional) label_mapping.json
     try {
       const resp = await fetch("tfjs_model/label_mapping.json");
@@ -59,9 +70,9 @@ async function loadHandsignModel() {
   } catch (err) {
     console.error("Model gagal diload!", err);
     alert("Model gagal diload 🤕. Cek path / versi TFJS.");
+    if (modelStatus) modelStatus.textContent = "❌ Model gagal dimuat";
   }
 }
-loadHandsignModel();
 
 /*****************
  *  QUESTION GEN *
