@@ -65,21 +65,15 @@
     <div class="page">
       <h2>⏱️ Sisa Waktu: <span id="time">120</span>s</h2>
 
-      <div id="camera" style="position: relative">
+      <div id="camera">
         <video
           id="webcam"
           autoplay
           playsinline
           width="320"
           height="240"
-          style="transform: scaleX(-1)"
         ></video>
-        <canvas
-          id="overlay"
-          width="320"
-          height="240"
-          style="position: absolute; left: 0; top: 0; pointer-events: none"
-        ></canvas>
+        <canvas id="overlay" width="320" height="240"></canvas>
       </div>
 
       <div id="question-box">

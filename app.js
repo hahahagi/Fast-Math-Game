@@ -29,6 +29,12 @@ const choices = { a: $("a"), b: $("b"), c: $("c"), d: $("d") };
 /*****************
  * GAME VARIABLES *
  *****************/
+const HOLD_MS = 800; // harus ditahan 0.8 dtk
+const COOLDOWN_MS = 1200; // jeda 1.2 dtk sesudah dijawab
+let holdStart = null;
+let stableHand = "-";
+let cooldown = false;
+
 let score = 0;
 let currentAnswer = "";
 let lastHand = "-";
@@ -247,14 +253,13 @@ let gestureStart = null; // kapan pose mulai stabil
 let lastPred = "-";
 
 async function onResults(res) {
-  if (!window.tfModel) return; // model belum siap
+  if (!tfModel) return;
 
+  // ----- bersihkan + mirror via CSS saja -----
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-  canvasCtx.translate(canvasElement.width, 0);
-  canvasCtx.scale(-1, 1);
 
-  // ---------- jika ada 1 tangan ----------
+  // ----- deteksi tangan -----
   if (res.multiHandLandmarks?.length === 1) {
     const lm = res.multiHandLandmarks[0];
     drawConnectors(canvasCtx, lm, HAND_CONNECTIONS, {
@@ -263,39 +268,43 @@ async function onResults(res) {
     });
     drawLandmarks(canvasCtx, lm, { color: "#FFCC00", lineWidth: 2 });
 
-    // tensor bentuk [1, 63]
-    const arr = [];
-    lm.forEach((pt) => arr.push(pt.x, pt.y, pt.z));
-    if (arr.length === 63) {
-      const predIdx = (
-        await tfModel
-          .predict(tf.tensor2d([arr]))
-          .argMax(-1)
-          .data()
-      )[0];
-      const hand = labels[predIdx] ?? predIdx;
-      handsignEl.textContent = hand; // tampilkan realtime
+    // prediksi
+    const arr = lm.flatMap((pt) => [pt.x, pt.y, pt.z]); // [63]
+    const predIdx = (
+      await tfModel
+        .predict(tf.tensor2d([arr]))
+        .argMax(-1)
+        .data()
+    )[0];
+    const hand = labels[predIdx] ?? "-";
+    handsignEl.textContent = hand;
 
-      // -------- handle delay 0.8s --------
-      if (["a", "b", "c", "d"].includes(hand)) {
-        if (hand !== lastPred) {
-          // pose baru: reset timer
-          lastPred = hand;
-          gestureStart = Date.now();
-        } else if (Date.now() - gestureStart >= GESTURE_HOLD_MS) {
-          checkAnswer(hand); // dinilai sekali
-          gestureStart = null; // tunggu pose berikut
-        }
-      } else {
-        // pose di luar a–d
-        lastPred = "-";
-        gestureStart = null;
+    // ---------- logika hold + cooldown ----------
+    if (["a", "b", "c", "d"].includes(hand)) {
+      if (cooldown) {
+        /* abaikan selama cooldown */
+      } else if (hand !== stableHand) {
+        // pose baru
+        stableHand = hand;
+        holdStart = Date.now();
+      } else if (Date.now() - holdStart >= HOLD_MS) {
+        checkAnswer(hand); // jawab!
+        cooldown = true;
+        setTimeout(() => {
+          cooldown = false;
+        }, COOLDOWN_MS);
+        stableHand = "-"; // wajib angkat tangan dulu
       }
+    } else {
+      // pose di luar a-d
+      stableHand = "-";
+      holdStart = null;
     }
   } else {
+    // tak ada tangan
     handsignEl.textContent = "-";
-    lastPred = "-";
-    gestureStart = null;
+    stableHand = "-";
+    holdStart = null;
   }
   canvasCtx.restore();
 }
