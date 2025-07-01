@@ -37,6 +37,10 @@ def instructions():
 def menu():
     return render_template("menu.html")
 
+@app.route("/operation")
+def operation():
+    return render_template("operation.html")
+
 @app.route("/game")
 def game():
     return render_template("index.html")

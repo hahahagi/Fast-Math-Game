@@ -11,27 +11,32 @@
     />
   </head>
   <body>
-    <audio id="backsound" src="static/audio/backsound.mp3" autoplay loop></audio>
-<script>
-  const audio = document.getElementById('backsound');
-  audio.volume = 0.3;
+    <audio
+      id="backsound"
+      src="static/audio/backsound.mp3"
+      autoplay
+      loop
+    ></audio>
+    <script>
+      const audio = document.getElementById("backsound");
+      audio.volume = 0.3;
 
-  // Cek jika ada waktu tersimpan, mulai dari situ
-  let pos = localStorage.getItem('backsoundTime');
-  if (pos) {
-    audio.currentTime = parseFloat(pos);
-  }
+      // Cek jika ada waktu tersimpan, mulai dari situ
+      let pos = localStorage.getItem("backsoundTime");
+      if (pos) {
+        audio.currentTime = parseFloat(pos);
+      }
 
-  // Simpan waktu berjalan sebelum halaman ditinggalkan
-  setInterval(() => {
-    localStorage.setItem('backsoundTime', audio.currentTime);
-  }, 1000);
+      // Simpan waktu berjalan sebelum halaman ditinggalkan
+      setInterval(() => {
+        localStorage.setItem("backsoundTime", audio.currentTime);
+      }, 1000);
 
-  // Untuk browser modern, autoplay kadang butuh user gesture
-  document.addEventListener('click', () => {
-    if (audio.paused) audio.play();
-  });
-</script>
+      // Untuk browser modern, autoplay kadang butuh user gesture
+      document.addEventListener("click", () => {
+        if (audio.paused) audio.play();
+      });
+    </script>
 
     <!-- SHOOTING STARS BACKGROUND -->
     <div class="shooting-stars">
@@ -86,7 +91,7 @@
           "input[name='level']:checked"
         ).value;
         localStorage.level = level;
-        window.location.href = "/game";
+        window.location.href = "/operation"; // ubah dari /game ke /operation
       });
     </script>
   </body>

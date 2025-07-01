@@ -37,12 +37,14 @@ function showPopupFeedback(message, color) {
 }
 
 function opSet() {
-  // pilih operasi secara acak
+  const op = localStorage.operation;
+  if (op === "add") return "+";
+  if (op === "sub") return "-";
+  if (op === "mul") return "×";
+  if (op === "div") return "÷";
+  // fallback: acak jika tidak ada pilihan
   const ops = ["+", "-", "×", "÷"];
   return ops[Math.floor(Math.random() * ops.length)];
-}
-function rangeByLevel() {
-  return level === "easy" ? 20 : level === "medium" ? 50 : 100;
 }
 
 function generateQuestion() {
