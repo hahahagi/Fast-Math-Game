@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fast Math Game</title>
+
+    <!-- CSS & JS disajikan Flask -->
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Pastikan tfjs_model/model.json sudah ada -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  </head>
+  <body>
+    <audio
+      id="backsound"
+      src="static/audio/backsound.mp3"
+      autoplay
+      loop
+    ></audio>
+    <script>
+      const audio = document.getElementById("backsound");
+      audio.volume = 0.3;
+
+      // Cek jika ada waktu tersimpan, mulai dari situ
+      let pos = localStorage.getItem("backsoundTime");
+      if (pos) {
+        audio.currentTime = parseFloat(pos);
+      }
+
+      // Simpan waktu berjalan sebelum halaman ditinggalkan
+      setInterval(() => {
+        localStorage.setItem("backsoundTime", audio.currentTime);
+      }, 1000);
+
+      // Untuk browser modern, autoplay kadang butuh user gesture
+      document.addEventListener("click", () => {
+        if (audio.paused) audio.play();
+      });
+    </script>
+
+    <!-- PLANET BACKGROUND -->
+    <div class="css-planets">
+      <div class="planet planet-a"></div>
+      <div class="planet planet-b"></div>
+      <div class="planet planet-c"></div>
+    </div>
+
+    <!-- MULTI ROCKETS -->
+    <div class="rocket-path">
+      <div class="rocket rocket-1">🚀🚀🚀🚀</div>
+    </div>
+
+    <!-- MAIN GAME CONTENT -->
+    <div class="page">
+      <h2>⏱️ Sisa Waktu: <span id="time">120</span>s</h2>
+
+      <div id="camera" style="position: relative">
+        <video
+          id="webcam"
+          autoplay
+          playsinline
+          width="320"
+          height="240"
+          style="transform: scaleX(-1)"
+        ></video>
+        <canvas
+          id="overlay"
+          width="320"
+          height="240"
+          style="position: absolute; left: 0; top: 0; pointer-events: none"
+        ></canvas>
+      </div>
+
+      <div id="question-box">
+        <p id="question">Loading…</p>
+        <ul id="choices" style="list-style: none; padding: 0">
+          <li><strong>A:</strong> <span id="a"></span></li>
+          <li><strong>B:</strong> <span id="b"></span></li>
+          <li><strong>C:</strong> <span id="c"></span></li>
+          <li><strong>D:</strong> <span id="d"></span></li>
+        </ul>
+      </div>
+
+      <p>🖐️ Detected: <span id="handsign">-</span></p>
+      <p>✅ Skor: <span id="score">0</span></p>
+    </div>
+
+    <!-- Audio -->
+    <audio
+      id="sound-correct"
+      src="static/audio/correct.wav"
+      preload="auto"
+    ></audio>
+    <audio id="sound-wrong" src="static/audio/wrong.mp3" preload="auto"></audio>
+    <audio id="sound-finish" preload="auto">
+      <source src="static/audio/finish.mp3" type="audio/mp3" />
+    </audio>
+    <div id="popup-feedback">✅ Benar!</div>
+  </body>
+</html>

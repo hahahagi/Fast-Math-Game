@@ -1,7 +1,0 @@
-flask
-flask_cors
-opencv-python
-mediapipe
-joblib
-numpy
-scikit-learn

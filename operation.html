@@ -54,7 +54,7 @@
         </label>
       </form>
       <div class="nav-buttons">
-        <a href="/menu" class="btn">Kembali</a>
+        <a href="menu.html" class="btn">Kembali</a>
         <button id="select-operation-btn" class="btn pulse">Lanjut ➡️</button>
       </div>
     </div>
@@ -64,7 +64,7 @@
         e.preventDefault();
         const operation = document.querySelector("input[name='operation']:checked").value;
         localStorage.operation = operation;
-        window.location.href = "/game";
+        window.location.href = "game.html";
       });
     </script>
   </body>

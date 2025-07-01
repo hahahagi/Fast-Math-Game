@@ -3,9 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fast Math Game</title>
-
-    <!-- CSS & JS disajikan Flask -->
+    <title>Fast Math – Selamat Datang</title>
     <link rel="stylesheet" href="style.css" />
     <script src="app.js" defer></script>
     <link
@@ -41,6 +39,13 @@
       });
     </script>
 
+    <!-- SHOOTING STARS BACKGROUND -->
+    <div class="shooting-stars">
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+    </div>
+
     <!-- PLANET BACKGROUND -->
     <div class="css-planets">
       <div class="planet planet-a"></div>
@@ -53,46 +58,15 @@
       <div class="rocket rocket-1">🚀🚀🚀🚀</div>
     </div>
 
-    <!-- MAIN GAME CONTENT -->
-    <div class="page">
-      <h2>⏱️ Sisa Waktu: <span id="time">120</span>s</h2>
+    <!-- PAGE CONTENT -->
+    <div class="page welcome">
+      <h1 class="title">🎮 Fast Math</h1>
+      <p class="subtitle">
+        Game berhitung seru dengan <strong>handsign</strong>!
+      </p>
 
-      <div id="camera">
-        <img
-          src="/video_feed"
-          width="320"
-          style="border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3)"
-        />
-      </div>
-
-      <div id="question-box">
-        <p id="question">Loading…</p>
-        <ul id="choices" style="list-style: none; padding: 0">
-          <li><strong>A:</strong> <span id="a"></span></li>
-          <li><strong>B:</strong> <span id="b"></span></li>
-          <li><strong>C:</strong> <span id="c"></span></li>
-          <li><strong>D:</strong> <span id="d"></span></li>
-        </ul>
-      </div>
-
-      <p>🖐️ Detected: <span id="handsign">-</span></p>
-      <p>✅ Skor: <span id="score">0</span></p>
+      <a href="guide.html" class="btn pulse">Mulai</a>
+      <!-- <a href="/menu" class="btn">Lewati Petunjuk</a> -->
     </div>
-
-    <!-- Audio -->
-    <audio
-      id="sound-correct"
-      src="static/audio/correct.wav"
-      preload="auto"
-    ></audio>
-    <audio
-      id="sound-wrong"
-      src="static/audio/wrong.mp3"
-      preload="auto"
-    ></audio>
-    <audio id="sound-finish" preload="auto">
-      <source src="static/audio/finish.mp3" type="audio/mp3" />
-    </audio>
-    <div id="popup-feedback">✅ Benar!</div>
   </body>
 </html>

@@ -521,3 +521,25 @@ body::before {
   margin-top: 4px;
   box-shadow: 0 1px 3px #ccc1;
 }
+
+#camera img,
+#camera video {
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+#camera video {
+  border-radius: 15px;
+  box-shadow: 0 0 28px #00e5ff88, 0 0 10px #1e88e588;
+  outline: 2.5px solid #00e5ff55;
+  background: #051030;
+  transition: box-shadow 0.3s;
+  transform: scaleX(-1);
+}
+
+#webcam {
+  transform: scaleX(-1);
+}
+
+.mirror {
+  transform: scaleX(-1);
+}
