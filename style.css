@@ -544,13 +544,14 @@ body::before {
   transform: scaleX(-1);
 }
 
+/* opsional, supaya status kecil di pojok */
 .status {
   position: absolute;
   top: 12px;
   right: 12px;
-  padding: 6px 12px;
   background: #222;
   color: #fff;
+  padding: 6px 12px;
   border-radius: 6px;
   font-family: monospace;
   font-size: 14px;

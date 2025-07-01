@@ -42,37 +42,31 @@ window.tfModel = null; // diekspos global utk debugging
 let labels = ["a", "b", "c", "d"];
 
 async function loadHandsignModel() {
-  const modelStatus = document.getElementById("model-status");
-  if (modelStatus) {
-    modelStatus.textContent = "📦 Memuat model…";
-    modelStatus.style.display = "block";
-  }
+  const modelStatus = document.getElementById("model-status"); // status div
 
   try {
-    window.tfModel = await tf.loadLayersModel("tfjs_model/model.json");
-    console.log(
-      "TFJS:",
-      tf.version_core,
-      "input→",
-      window.tfModel.inputs[0].shape
-    );
+    // teks awal sudah “Sedang memuat model…”, biarkan saja
 
-    if (modelStatus) {
-      modelStatus.textContent = "✅ Model siap!";
-      setTimeout(() => (modelStatus.style.display = "none"), 800);
-    }
+    window.tfModel = await tf.loadLayersModel("tfjs_model/model.json");
+    console.log("TFJS:", tf.version_core, "input→", tfModel.inputs[0].shape);
+
+    // sembunyikan status setelah sukses
+    if (modelStatus) modelStatus.style.display = "none";
 
     // (optional) label_mapping.json
     try {
       const resp = await fetch("tfjs_model/label_mapping.json");
       if (resp.ok) labels = await resp.json();
-    } catch {}
+    } catch {
+      /* abaikan */
+    }
   } catch (err) {
     console.error("Model gagal diload!", err);
-    alert("Model gagal diload 🤕. Cek path / versi TFJS.");
     if (modelStatus) modelStatus.textContent = "❌ Model gagal dimuat";
+    // tidak pakai alert agar halaman tidak terhenti
   }
 }
+loadHandsignModel();
 
 /*****************
  *  QUESTION GEN *
