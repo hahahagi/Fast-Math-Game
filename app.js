@@ -150,7 +150,10 @@ function generateQuestion() {
 /*****************
  *     TIMER     *
  *****************/
+const timePerLevel = { easy: 60, medium: 120, hard: 180 }; // 1–3 menit
+timeLeft = timePerLevel[level] ?? 60; // ganti nilai awal
 timeEl.textContent = timeLeft;
+
 const timerID = setInterval(() => {
   timeLeft--;
   timeEl.textContent = timeLeft;
@@ -236,19 +239,23 @@ const camera = new Camera(videoElement, {
 });
 camera.start();
 
+/*****************
+ *  MEDIAPIPE CB *
+ *****************/
+const GESTURE_HOLD_MS = 800; // tahan 0.8 detik agar valid
+let gestureStart = null; // kapan pose mulai stabil
+let lastPred = "-";
+
 async function onResults(res) {
-  if (!window.tfModel) {
-    handsignEl.textContent = "-";
-    return;
-  }
+  if (!window.tfModel) return; // model belum siap
 
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-  // Mirror agar sama dgn tampilan video (diatur via CSS)
   canvasCtx.translate(canvasElement.width, 0);
   canvasCtx.scale(-1, 1);
 
-  if (res.multiHandLandmarks && res.multiHandLandmarks.length === 1) {
+  // ---------- jika ada 1 tangan ----------
+  if (res.multiHandLandmarks?.length === 1) {
     const lm = res.multiHandLandmarks[0];
     drawConnectors(canvasCtx, lm, HAND_CONNECTIONS, {
       color: "#00FFCC",
@@ -256,22 +263,39 @@ async function onResults(res) {
     });
     drawLandmarks(canvasCtx, lm, { color: "#FFCC00", lineWidth: 2 });
 
-    // flatten xyz
+    // tensor bentuk [1, 63]
     const arr = [];
     lm.forEach((pt) => arr.push(pt.x, pt.y, pt.z));
     if (arr.length === 63) {
-      const input = tf.tensor2d([arr]);
-      const idx = (await window.tfModel.predict(input).argMax(-1).data())[0];
-      const hand = labels[idx] ?? idx;
-      handsignEl.textContent = hand;
-      if (["a", "b", "c", "d"].includes(hand) && hand !== lastHand) {
-        lastHand = hand;
-        checkAnswer(hand);
+      const predIdx = (
+        await tfModel
+          .predict(tf.tensor2d([arr]))
+          .argMax(-1)
+          .data()
+      )[0];
+      const hand = labels[predIdx] ?? predIdx;
+      handsignEl.textContent = hand; // tampilkan realtime
+
+      // -------- handle delay 0.8s --------
+      if (["a", "b", "c", "d"].includes(hand)) {
+        if (hand !== lastPred) {
+          // pose baru: reset timer
+          lastPred = hand;
+          gestureStart = Date.now();
+        } else if (Date.now() - gestureStart >= GESTURE_HOLD_MS) {
+          checkAnswer(hand); // dinilai sekali
+          gestureStart = null; // tunggu pose berikut
+        }
+      } else {
+        // pose di luar a–d
+        lastPred = "-";
+        gestureStart = null;
       }
-      input.dispose();
     }
   } else {
     handsignEl.textContent = "-";
+    lastPred = "-";
+    gestureStart = null;
   }
   canvasCtx.restore();
 }
