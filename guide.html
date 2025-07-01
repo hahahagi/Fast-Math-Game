@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fast Math – Petunjuk</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="/static/app.js" defer></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <audio
+      id="backsound"
+      src="/static/audio/backsound.mp3"
+      autoplay
+      loop
+    ></audio>
+    <script>
+      const audio = document.getElementById("backsound");
+      audio.volume = 0.3;
+
+      // Cek jika ada waktu tersimpan, mulai dari situ
+      let pos = localStorage.getItem("backsoundTime");
+      if (pos) {
+        audio.currentTime = parseFloat(pos);
+      }
+
+      // Simpan waktu berjalan sebelum halaman ditinggalkan
+      setInterval(() => {
+        localStorage.setItem("backsoundTime", audio.currentTime);
+      }, 1000);
+
+      // Untuk browser modern, autoplay kadang butuh user gesture
+      document.addEventListener("click", () => {
+        if (audio.paused) audio.play();
+      });
+    </script>
+
+    <!-- SHOOTING STARS BACKGROUND -->
+    <div class="shooting-stars">
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+    </div>
+
+    <!-- PLANET BACKGROUND -->
+    <div class="css-planets">
+      <div class="planet planet-a"></div>
+      <div class="planet planet-b"></div>
+      <div class="planet planet-c"></div>
+    </div>
+
+    <!-- MULTI ROCKETS -->
+    <div class="rocket-path">
+      <div class="rocket rocket-1">🚀🚀🚀🚀</div>
+    </div>
+
+    <!-- PETUNJUK PERMAINAN -->
+    <div class="page">
+      <h2 class="title">📖 Cara Bermain</h2>
+
+      <ol class="guide-list">
+        <li>
+          Pilih tingkat kesulitan: <strong>Mudah, Sedang, atau Sulit</strong>.
+        </li>
+        <li>
+          Soal penjumlahan akan muncul bersama empat pilihan jawaban
+          <em>(A / B / C / D)</em>.
+        </li>
+        <li>Jawab dengan <strong>handsign</strong> di depan kamera</li>
+        <li>
+          Permainan berlangsung <strong>1 menit</strong>. Usahakan jawab
+          sebanyak-banyaknya!
+        </li>
+        <li>
+          Skor = jumlah jawaban benar. Skor akhir akan tampil setelah waktu
+          habis.
+        </li>
+      </ol>
+
+      <!-- Handsign Display -->
+      <div class="handsign-row">
+        <div class="handsign-item">
+          <img src="/static/img/handsign_A.png" alt="Handsign A" />
+          <div class="handsign-label">A</div>
+        </div>
+        <div class="handsign-item">
+          <img src="/static/img/handsign_B.png" alt="Handsign B" />
+          <div class="handsign-label">B</div>
+        </div>
+        <div class="handsign-item">
+          <img src="/static/img/handsign_C.png" alt="Handsign C" />
+          <div class="handsign-label">C</div>
+        </div>
+        <div class="handsign-item">
+          <img src="/static/img/handsign_D.png" alt="Handsign D" />
+          <div class="handsign-label">D</div>
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <a href="/" class="btn">Kembali</a>
+        <a href="/menu" class="btn pulse">Lanjut ➡️</a>
+      </div>
+    </div>
+  </body>
+</html>
