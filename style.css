@@ -561,9 +561,9 @@ body::before {
 
 #camera {
   position: relative;
+  width: 100%;
+  max-width: 320px; /* batas maksimum biar gak terlalu besar di desktop */
   margin: 0 auto;
-  display: block;
-  width: fit-content;
 }
 
 #overlay {
@@ -573,4 +573,11 @@ body::before {
   pointer-events: none;
   z-index: 1;
   transform: scaleX(-1);
+}
+
+#camera video,
+#camera canvas {
+  width: 100%;
+  height: auto;
+  display: block;
 }
