@@ -178,12 +178,25 @@ const timerID = setInterval(() => {
 /*****************
  *  POPUP HUD    *
  *****************/
-function showPopup(msg, bg) {
+function showPopup(type) {
   const pp = $("popup-feedback");
-  pp.textContent = msg;
-  pp.style.background = bg;
+
+  // Reset classes
+  pp.className = "";
+
+  if (type === "correct") {
+    pp.innerHTML = "<div class='icon'>✅</div><div class='text'>Benar!</div>";
+    pp.classList.add("correct");
+  } else {
+    pp.innerHTML = "<div class='icon'>❌</div><div class='text'>Salah!</div>";
+    pp.classList.add("wrong");
+  }
+
+  // Trigger reflow
+  void pp.offsetWidth;
+
   pp.classList.add("show");
-  setTimeout(() => pp.classList.remove("show"), 1e3);
+  setTimeout(() => pp.classList.remove("show"), 1000);
 }
 
 /*****************
@@ -197,7 +210,7 @@ function checkAnswer(hand) {
     correctSound?.play();
     score++;
     scoreEl.textContent = score;
-    showPopup("✅ Benar!", "#4caf50");
+    showPopup("correct");
     setTimeout(generateQuestion, 500); // Delay sedikit biar kelihatan hijaunya
   } else {
     if (choiceEl) {
@@ -205,7 +218,7 @@ function checkAnswer(hand) {
       setTimeout(() => choiceEl.classList.remove("wrong"), 500);
     }
     wrongSound?.play();
-    showPopup("❌ Salah!", "#e74c3c");
+    showPopup("wrong");
   }
 }
 

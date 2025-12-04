@@ -366,6 +366,11 @@ body::before {
 
 /* Responsive */
 @media (max-width: 600px) {
+  .page {
+    padding: 1rem;
+    width: 95%;
+  }
+
   .title {
     font-size: 2.3rem;
   }
@@ -385,6 +390,12 @@ body::before {
 
   .choice-item {
     font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+  .handsign-item img {
+    width: 50px;
+    height: 50px;
   }
 }
 
@@ -441,26 +452,60 @@ body::before {
 /* Popup Feedback */
 #popup-feedback {
   position: fixed;
-  top: 20%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  padding: 15px 30px;
-  border-radius: 50px;
-  color: white;
-  font-weight: bold;
-  font-size: 1.5rem;
+  transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+  padding: 20px 40px;
+  border-radius: 15px;
+  background: #fff;
+  border: 4px solid #2d3436;
+  box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.2);
   z-index: 2000;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  border: 3px solid #fff;
-  background: #00b894;
-  opacity: 1;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 0;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
 }
 
 #popup-feedback.show {
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  opacity: 1;
   pointer-events: auto;
+}
+
+#popup-feedback .icon {
+  font-size: 3rem;
+  margin-bottom: 5px;
+}
+
+#popup-feedback .text {
+  font-size: 2.5rem;
+  font-weight: bold;
+  font-family: "Patrick Hand", cursive;
+  color: #2d3436;
+  text-transform: uppercase;
+}
+
+/* Correct Variant */
+#popup-feedback.correct {
+  border-color: #00b894;
+  box-shadow: 8px 8px 0px #00b894;
+}
+#popup-feedback.correct .text {
+  color: #00b894;
+}
+
+/* Wrong Variant */
+#popup-feedback.wrong {
+  border-color: #d63031;
+  box-shadow: 8px 8px 0px #d63031;
+}
+#popup-feedback.wrong .text {
+  color: #d63031;
 }
 
 /* Handsign Images */
@@ -509,10 +554,18 @@ body::before {
   width: 100%;
   max-width: 320px;
   margin: 0 auto;
+  /* Ensure aspect ratio container if needed, but auto height is usually fine */
+}
+
+#camera video,
+#camera canvas {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+  border-radius: 10px;
 }
 
 #camera video {
-  border-radius: 10px;
   box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.2);
   border: 3px solid #2d3436;
   background: #000;
