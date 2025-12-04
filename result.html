@@ -11,46 +11,36 @@
     />
   </head>
   <body>
-    <audio id="backsound" src="static/audio/backsound.mp3" autoplay loop></audio>
-<script>
-  const audio = document.getElementById('backsound');
-  audio.volume = 0.3;
+    <audio
+      id="backsound"
+      src="static/audio/backsound.mp3"
+      autoplay
+      loop
+    ></audio>
+    <script>
+      const audio = document.getElementById("backsound");
+      audio.volume = 0.3;
 
-  // Cek jika ada waktu tersimpan, mulai dari situ
-  let pos = localStorage.getItem('backsoundTime');
-  if (pos) {
-    audio.currentTime = parseFloat(pos);
-  }
+      // Cek jika ada waktu tersimpan, mulai dari situ
+      let pos = localStorage.getItem("backsoundTime");
+      if (pos) {
+        audio.currentTime = parseFloat(pos);
+      }
 
-  // Simpan waktu berjalan sebelum halaman ditinggalkan
-  setInterval(() => {
-    localStorage.setItem('backsoundTime', audio.currentTime);
-  }, 1000);
+      // Simpan waktu berjalan sebelum halaman ditinggalkan
+      setInterval(() => {
+        localStorage.setItem("backsoundTime", audio.currentTime);
+      }, 1000);
 
-  // Untuk browser modern, autoplay kadang butuh user gesture
-  document.addEventListener('click', () => {
-    if (audio.paused) audio.play();
-  });
-</script>
+      // Untuk browser modern, autoplay kadang butuh user gesture
+      document.addEventListener("click", () => {
+        if (audio.paused) audio.play();
+      });
+    </script>
 
-    <!-- SHOOTING STARS BACKGROUND -->
-    <div class="shooting-stars">
-      <div class="star"></div>
-      <div class="star"></div>
-      <div class="star"></div>
-    </div>
-
-    <!-- PLANET BACKGROUND (CSS ONLY) -->
-    <div class="css-planets">
-      <div class="planet planet-a"></div>
-      <div class="planet planet-b"></div>
-      <div class="planet planet-c"></div>
-    </div>
-
-    <!-- MULTI ROCKETS -->
-    <div class="rocket-path">
-      <div class="rocket rocket-1">🚀🚀🚀🚀</div>
-    </div>
+    <!-- SHOOTING STARS BACKGROUND (Removed) -->
+    <!-- PLANET BACKGROUND (Removed) -->
+    <!-- MULTI ROCKETS (Removed) -->
 
     <!-- PAGE CONTENT -->
     <div class="page">
@@ -58,9 +48,33 @@
       <p class="subtitle">Skor Akhir Kamu:</p>
       <h2 id="final-score" style="font-size: 3rem; color: #4caf50">0</h2>
 
+      <!-- Form Simpan Skor -->
+      <div style="margin: 20px 0">
+        <input
+          type="text"
+          id="player-name"
+          placeholder="Masukkan Nama Kamu"
+          maxlength="10"
+          style="
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #2d3436;
+            background: #fff;
+            color: #2d3436;
+            text-align: center;
+            font-family: inherit;
+            width: 200px;
+            font-size: 1.2rem;
+          "
+        />
+        <br /><br />
+        <button id="save-btn" class="btn pulse" style="background: #00b894">
+          Simpan Skor 💾
+        </button>
+      </div>
+
       <div class="nav-buttons">
-        <a href="menu.html" class="btn">Main Lagi 🔁</a>
-        <a href="index.html" class="btn">Kembali ke Awal</a>
+        <a href="menu.html" class="btn">Menu Utama 🏠</a>
       </div>
     </div>
 
@@ -71,8 +85,39 @@
 
     <script>
       // tampilkan skor terakhir
-      document.getElementById("final-score").textContent =
-        localStorage.lastScore || 0;
+      const score = parseInt(localStorage.lastScore || 0);
+      document.getElementById("final-score").textContent = score;
+
+      // Logic Simpan Skor
+      document.getElementById("save-btn").addEventListener("click", () => {
+        const nameInput = document.getElementById("player-name");
+        const name = nameInput.value.trim() || "Anonim";
+        const level = localStorage.level || "unknown";
+        const operation = localStorage.operation || "unknown";
+
+        // Ambil data lama
+        let scores = [];
+        try {
+          scores = JSON.parse(localStorage.getItem("fastMathHighScores")) || [];
+        } catch (e) {
+          scores = [];
+        }
+
+        // Tambah skor baru
+        scores.push({
+          name: name,
+          score: score,
+          level: level,
+          operation: operation,
+          date: new Date().toISOString(),
+        });
+
+        // Simpan balik ke localStorage
+        localStorage.setItem("fastMathHighScores", JSON.stringify(scores));
+
+        // Redirect ke halaman High Score
+        window.location.href = "highscore.html";
+      });
     </script>
   </body>
 </html>

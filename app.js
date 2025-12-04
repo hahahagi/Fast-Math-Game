@@ -48,16 +48,17 @@ window.tfModel = null; // diekspos global utk debugging
 let labels = ["a", "b", "c", "d"];
 
 async function loadHandsignModel() {
-  const modelStatus = document.getElementById("model-status"); // status div
+  const loadingOverlay = document.getElementById("loading-overlay");
 
   try {
-    // teks awal sudah “Sedang memuat model…”, biarkan saja
-
     window.tfModel = await tf.loadLayersModel("tfjs_model/model.json");
     console.log("TFJS:", tf.version_core, "input→", tfModel.inputs[0].shape);
 
-    // sembunyikan status setelah sukses
-    if (modelStatus) modelStatus.style.display = "none";
+    // Sembunyikan overlay loading
+    if (loadingOverlay) {
+      loadingOverlay.classList.add("fade-out");
+      setTimeout(() => loadingOverlay.remove(), 500);
+    }
 
     // (optional) label_mapping.json
     try {
@@ -68,8 +69,10 @@ async function loadHandsignModel() {
     }
   } catch (err) {
     console.error("Model gagal diload!", err);
-    if (modelStatus) modelStatus.textContent = "❌ Model gagal dimuat";
-    // tidak pakai alert agar halaman tidak terhenti
+    if (loadingOverlay) {
+      loadingOverlay.innerHTML =
+        "<p style='color:red'>❌ Gagal memuat model. Coba refresh.</p>";
+    }
   }
 }
 loadHandsignModel();
@@ -84,6 +87,12 @@ function opSet() {
 }
 
 function generateQuestion() {
+  // Reset styles
+  ["a", "b", "c", "d"].forEach((k) => {
+    const el = document.getElementById(`choice-${k}`);
+    if (el) el.className = "choice-item";
+  });
+
   const cfg = {
     easy: { max: 30, mulMin: 2, mulMax: 10, answerMin: 1, answerMax: 50 },
     medium: { max: 100, mulMin: 3, mulMax: 15, answerMin: 10, answerMax: 200 },
@@ -181,15 +190,22 @@ function showPopup(msg, bg) {
  * ANSWER CHECK  *
  *****************/
 function checkAnswer(hand) {
+  const choiceEl = document.getElementById(`choice-${hand}`);
+
   if (hand === currentAnswer) {
+    if (choiceEl) choiceEl.classList.add("correct");
     correctSound?.play();
     score++;
     scoreEl.textContent = score;
-    showPopup("✅ Benar!", "#4caf50");
-    generateQuestion();
+    showPopup("✅ Benar!", "#4caf50");
+    setTimeout(generateQuestion, 500); // Delay sedikit biar kelihatan hijaunya
   } else {
+    if (choiceEl) {
+      choiceEl.classList.add("wrong");
+      setTimeout(() => choiceEl.classList.remove("wrong"), 500);
+    }
     wrongSound?.play();
-    showPopup("❌ Salah!", "#e74c3c");
+    showPopup("❌ Salah!", "#e74c3c");
   }
 }
 
@@ -199,6 +215,26 @@ function checkAnswer(hand) {
 function endGame() {
   clearInterval(timerID);
   localStorage.lastScore = score;
+
+  // Save to Highscore History
+  const history = JSON.parse(localStorage.getItem("gameHistory") || "[]");
+  const now = new Date();
+  const dateStr = now.toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  history.push({
+    score: score,
+    level: localStorage.level || "easy",
+    operation: localStorage.operation || "add",
+    date: dateStr,
+  });
+
+  localStorage.setItem("gameHistory", JSON.stringify(history));
+
   finishSound?.play();
   setTimeout(() => (location.href = "result.html"), 500);
 }
@@ -217,6 +253,7 @@ generateQuestion();
 const videoElement = $("webcam");
 const canvasElement = $("overlay");
 const canvasCtx = canvasElement.getContext("2d");
+const holdBar = $("hold-bar"); // Cache holdBar element
 
 // Sync size once video metadata ready
 videoElement.addEventListener("loadedmetadata", syncCanvasSize);
@@ -270,41 +307,75 @@ async function onResults(res) {
 
     // prediksi
     const arr = lm.flatMap((pt) => [pt.x, pt.y, pt.z]); // [63]
-    const predIdx = (
-      await tfModel
-        .predict(tf.tensor2d([arr]))
-        .argMax(-1)
-        .data()
-    )[0];
+
+    let predIdx = 0;
+    if (window.tfModel) {
+      const idx = tf.tidy(() => {
+        const input = tf.tensor2d([arr]);
+        const prediction = window.tfModel.predict(input);
+        return prediction.argMax(-1).dataSync()[0];
+      });
+      predIdx = idx;
+    }
+
     const hand = labels[predIdx] ?? "-";
     handsignEl.textContent = hand;
 
     // ---------- logika hold + cooldown ----------
+
+    // Reset pending state
+    ["a", "b", "c", "d"].forEach((k) => {
+      const el = document.getElementById(`choice-${k}`);
+      if (el) el.classList.remove("pending");
+    });
+
     if (["a", "b", "c", "d"].includes(hand)) {
       if (cooldown) {
-        /* abaikan selama cooldown */
+        if (holdBar) holdBar.style.width = "0%";
       } else if (hand !== stableHand) {
         // pose baru
         stableHand = hand;
         holdStart = Date.now();
-      } else if (Date.now() - holdStart >= HOLD_MS) {
-        checkAnswer(hand); // jawab!
-        cooldown = true;
-        setTimeout(() => {
-          cooldown = false;
-        }, COOLDOWN_MS);
-        stableHand = "-"; // wajib angkat tangan dulu
+        if (holdBar) holdBar.style.width = "0%";
+      } else {
+        // Sedang menahan pose yang sama
+        const elapsed = Date.now() - holdStart;
+        const progress = Math.min((elapsed / HOLD_MS) * 100, 100);
+
+        if (holdBar) holdBar.style.width = `${progress}%`;
+
+        // Highlight pending choice
+        const choiceEl = document.getElementById(`choice-${hand}`);
+        if (choiceEl) choiceEl.classList.add("pending");
+
+        if (elapsed >= HOLD_MS) {
+          checkAnswer(hand); // jawab!
+          cooldown = true;
+          if (holdBar) holdBar.style.width = "0%";
+          setTimeout(() => {
+            cooldown = false;
+          }, COOLDOWN_MS);
+          stableHand = "-"; // wajib angkat tangan dulu
+        }
       }
     } else {
       // pose di luar a-d
       stableHand = "-";
       holdStart = null;
+      if (holdBar) holdBar.style.width = "0%";
     }
   } else {
     // tak ada tangan
     handsignEl.textContent = "-";
     stableHand = "-";
     holdStart = null;
+    if (holdBar) holdBar.style.width = "0%";
+
+    // Reset pending state
+    ["a", "b", "c", "d"].forEach((k) => {
+      const el = document.getElementById(`choice-${k}`);
+      if (el) el.classList.remove("pending");
+    });
   }
   canvasCtx.restore();
 }

@@ -11,27 +11,29 @@
     />
   </head>
   <body>
-    <audio id="backsound" src="static/audio/backsound.mp3" autoplay loop></audio>
+    <audio
+      id="backsound"
+      src="static/audio/backsound.mp3"
+      autoplay
+      loop
+    ></audio>
     <script>
       const audio = document.getElementById("backsound");
       audio.volume = 0.3;
       let pos = localStorage.getItem("backsoundTime");
       if (pos) audio.currentTime = parseFloat(pos);
-      setInterval(() => localStorage.setItem("backsoundTime", audio.currentTime), 1000);
-      document.addEventListener("click", () => { if (audio.paused) audio.play(); });
+      setInterval(
+        () => localStorage.setItem("backsoundTime", audio.currentTime),
+        1000
+      );
+      document.addEventListener("click", () => {
+        if (audio.paused) audio.play();
+      });
     </script>
 
-    <div class="shooting-stars">
-      <div class="star"></div><div class="star"></div><div class="star"></div>
-    </div>
-    <div class="css-planets">
-      <div class="planet planet-a"></div>
-      <div class="planet planet-b"></div>
-      <div class="planet planet-c"></div>
-    </div>
-    <div class="rocket-path">
-      <div class="rocket rocket-1">🚀🚀🚀🚀</div>
-    </div>
+    <!-- SHOOTING STARS BACKGROUND (Removed) -->
+    <!-- PLANET BACKGROUND (Removed) -->
+    <!-- MULTI ROCKETS (Removed) -->
 
     <div class="page">
       <h2 class="title">➕ Pilih Operasi Matematika</h2>
@@ -60,12 +62,16 @@
     </div>
 
     <script>
-      document.getElementById("select-operation-btn").addEventListener("click", function(e) {
-        e.preventDefault();
-        const operation = document.querySelector("input[name='operation']:checked").value;
-        localStorage.operation = operation;
-        window.location.href = "game.html";
-      });
+      document
+        .getElementById("select-operation-btn")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          const operation = document.querySelector(
+            "input[name='operation']:checked"
+          ).value;
+          localStorage.operation = operation;
+          window.location.href = "game.html";
+        });
     </script>
   </body>
 </html>

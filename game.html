@@ -19,8 +19,16 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
   </head>
   <body>
+    <!-- LOADING OVERLAY -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Memuat Model AI...</p>
+    </div>
+
     <!-- letakkan di dalam <body>, cukup sekali -->
-    <div id="model-status" class="status">Sedang memuat model…</div>
+    <div id="model-status" class="status" style="display: none">
+      Sedang memuat model…
+    </div>
 
     <audio
       id="backsound"
@@ -49,46 +57,91 @@
       });
     </script>
 
-    <!-- PLANET BACKGROUND -->
-    <div class="css-planets">
-      <div class="planet planet-a"></div>
-      <div class="planet planet-b"></div>
-      <div class="planet planet-c"></div>
-    </div>
-
-    <!-- MULTI ROCKETS -->
-    <div class="rocket-path">
-      <div class="rocket rocket-1">🚀🚀🚀🚀</div>
-    </div>
+    <!-- PLANET BACKGROUND (Removed) -->
+    <!-- MULTI ROCKETS (Removed) -->
 
     <!-- MAIN GAME CONTENT -->
-    <div class="page">
+    <div class="page game-layout">
       <h2>⏱️ Sisa Waktu: <span id="time">120</span>s</h2>
 
-      <div id="camera">
+      <div id="camera" class="camera-container">
         <video
           id="webcam"
+          class="mirror"
           autoplay
           playsinline
           width="320"
           height="240"
         ></video>
-        <canvas id="overlay" width="320" height="240"></canvas>
+        <canvas id="overlay" class="mirror" width="320" height="240"></canvas>
+        <!-- Progress Bar for Hold Gesture -->
+        <div class="hold-progress-container">
+          <div id="hold-bar" class="hold-bar"></div>
+        </div>
       </div>
 
       <div id="question-box">
         <p id="question">Loading…</p>
-        <ul id="choices" style="list-style: none; padding: 0">
-          <li><strong>A:</strong> <span id="a"></span></li>
-          <li><strong>B:</strong> <span id="b"></span></li>
-          <li><strong>C:</strong> <span id="c"></span></li>
-          <li><strong>D:</strong> <span id="d"></span></li>
+        <ul id="choices" class="choices-grid">
+          <li id="choice-a" class="choice-item">
+            <strong>A:</strong> <span id="a"></span>
+          </li>
+          <li id="choice-b" class="choice-item">
+            <strong>B:</strong> <span id="b"></span>
+          </li>
+          <li id="choice-c" class="choice-item">
+            <strong>C:</strong> <span id="c"></span>
+          </li>
+          <li id="choice-d" class="choice-item">
+            <strong>D:</strong> <span id="d"></span>
+          </li>
         </ul>
       </div>
 
-      <p>🖐️ Detected: <span id="handsign">-</span></p>
-      <p>✅ Skor: <span id="score">0</span></p>
+      <div
+        class="game-footer"
+        style="
+          grid-column: 1 / -1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          margin-top: 20px;
+        "
+      >
+        <div
+          style="display: flex; gap: 20px; font-size: 1.2rem; font-weight: bold"
+        >
+          <span>🖐️ <span id="handsign">-</span></span>
+          <span>✅ <span id="score">0</span></span>
+        </div>
+        <button
+          id="end-game-btn"
+          class="btn"
+          style="
+            background: rgba(255, 68, 68, 0.2);
+            border: 1px solid #ff4444;
+            font-size: 0.9rem;
+            padding: 8px 20px;
+            margin-top: 10px;
+          "
+        >
+          Akhiri Game 🏁
+        </button>
+      </div>
     </div>
+
+    <script>
+      document.getElementById("end-game-btn").addEventListener("click", () => {
+        if (typeof endGame === "function") {
+          if (confirm("Yakin ingin mengakhiri permainan?")) {
+            endGame();
+          }
+        } else {
+          console.error("Fungsi endGame belum siap.");
+        }
+      });
+    </script>
 
     <!-- Audio -->
     <audio

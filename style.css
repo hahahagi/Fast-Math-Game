@@ -1,4 +1,7 @@
-/* ==== FAST MATH – SPACE EXPLORER THEME ==== */
+/* ==== FAST MATH – SKETCHBOOK THEME ==== */
+
+/* Import Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Fredoka:wght@400;600&display=swap");
 
 /* Reset */
 * {
@@ -9,83 +12,127 @@
 
 /* Base */
 body {
-  font-family: "Fredoka", sans-serif;
-  background: radial-gradient(circle at center, #0b032d 0%, #03001c 100%);
-  color: #e0e0e0;
+  font-family: "Patrick Hand", cursive; /* Handwriting font */
+  background-color: #f8f9fa;
+  /* Graph Paper Pattern */
+  background-image: linear-gradient(#e1e1e1 1px, transparent 1px),
+    linear-gradient(90deg, #e1e1e1 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: center center;
+  color: #2d3436;
   min-height: 100vh;
-  background-attachment: fixed;
-  background-size: cover;
-  overflow-x: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-x: hidden;
 }
 
-/* Starfield Background Animation */
+/* Doodle Background Elements */
 body::before {
   content: "";
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://www.transparenttextures.com/patterns/stardust.png");
-  opacity: 0.2;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+  pointer-events: none;
   z-index: -1;
-  animation: starDrift 60s linear infinite;
 }
 
-/* Main Container */
+/* Main Container - The "Paper" */
 .page {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  padding: 3rem;
-  border-radius: 25px;
+  background: #fff;
+  padding: 2.5rem;
   width: 90%;
-  max-width: 650px;
-  box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
-  animation: fadeIn 1s ease;
+  max-width: 700px;
+  position: relative;
+
+  /* Sketchy Border */
+  border: 3px solid #2d3436;
+  border-radius: 2px; /* Slightly rounded but mostly sharp */
+
+  /* Hard Shadow for "Sticker" or "Card" look */
+  box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.15);
+
   text-align: center;
+  animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.8) translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Title */
 .title {
-  font-family: "Orbitron", sans-serif;
-  font-size: 3rem;
-  font-weight: bold;
-  background: linear-gradient(45deg, #00c3ff, #ffff1c, #ff5c5c);
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-  margin-bottom: 1rem;
+  font-family: "Fredoka", sans-serif; /* More readable for big titles */
+  font-size: 3.5rem;
+  font-weight: 600;
+  color: #2d3436;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 3px 3px 0px #fab1a0; /* Pastel shadow */
 }
 
 /* Subtitle */
 .subtitle {
-  font-size: 1.2rem;
-  color: #ffee58;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-  margin-bottom: 2rem;
+  font-size: 1.4rem;
+  color: #636e72;
+  margin-bottom: 2.5rem;
+  font-weight: 500;
 }
 
-/* Buttons */
+/* Buttons - "Hand Drawn" Style */
 .btn {
-  padding: 1rem 2rem;
-  background: linear-gradient(135deg, #00e5ff, #7c4dff);
-  color: white;
-  border: none;
-  border-radius: 40px;
-  font-size: 1.1rem;
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background: #fff;
+  color: #2d3436;
+  border: 3px solid #2d3436;
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* Sketchy border radius */
+  font-family: "Patrick Hand", cursive;
+  font-size: 1.3rem;
   font-weight: bold;
   cursor: pointer;
-  margin: 0.5rem;
-  transition: transform 0.3s, box-shadow 0.3s;
-  box-shadow: 0 0 15px #00e5ff;
+  margin: 0.8rem;
   text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 4px 4px 0px #2d3436; /* Hard shadow */
+  position: relative;
+  overflow: hidden;
 }
 
 .btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 25px #7c4dff;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #2d3436;
+  background-color: #ffeaa7; /* Pastel Yellow on hover */
+}
+
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #2d3436;
+}
+
+/* Primary Button Variant */
+.btn.pulse {
+  background-color: #74b9ff; /* Pastel Blue */
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+}
+.btn.pulse:hover {
+  background-color: #0984e3;
 }
 
 /* Navigation Buttons */
@@ -99,26 +146,28 @@ body::before {
 
 /* Guide List */
 .guide-list {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 2rem;
-  border-radius: 20px;
-  color: #b2ebf2;
-  list-style: none;
   text-align: left;
-  box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1);
+  margin: 20px 0;
+  padding-left: 20px;
+  list-style-type: none;
+  background: transparent;
+  box-shadow: none;
+  color: #2d3436;
 }
 
 .guide-list li {
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
+  margin-bottom: 15px;
   position: relative;
-  padding-left: 2rem;
+  padding-left: 25px;
+  color: #2d3436;
+  font-size: 1.2rem;
 }
 
 .guide-list li::before {
-  content: "🪐";
+  content: "✏️";
   position: absolute;
-  left: 0;
+  left: -5px;
+  top: 0;
 }
 
 /* Difficulty Section */
@@ -130,68 +179,165 @@ body::before {
 }
 
 .option {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 1rem;
-  border-radius: 15px;
-  border: 2px dashed #00e5ff;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
   cursor: pointer;
-  transition: 0.3s;
+  font-size: 1.3rem;
+  user-select: none;
+  background: transparent;
+  border: none;
 }
 
 .option:hover {
-  background: rgba(0, 229, 255, 0.1);
-  transform: scale(1.05);
+  background: transparent;
+  transform: none;
 }
 
 .option input {
-  transform: scale(1.4);
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border: 2px solid #2d3436;
+  border-radius: 5px;
+}
+
+.option:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.option input:checked ~ .checkmark {
+  background-color: #0984e3;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.option input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.option .checkmark:after {
+  left: 7px;
+  top: 3px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
 }
 
 .option span {
-  font-size: 1.2rem;
-  color: #29b6f6;
-  font-weight: bold;
+  color: #2d3436;
+  font-weight: normal;
+  font-size: 1.3rem;
 }
 
 /* Game Elements */
 #camera img {
-  border-radius: 15px;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  border-radius: 10px;
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.2);
+  border: 3px solid #2d3436;
 }
 
 #question {
-  font-size: 2rem;
-  color: #ffeb3b;
-  text-shadow: 0 0 8px #fff;
-  margin: 1.5rem 0;
-}
-
-#choices {
-  list-style: none;
-  display: grid;
-  gap: 1rem;
-  padding: 0;
-  grid-template-columns: 1fr 1fr;
-}
-
-#choices li {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  padding: 1rem;
-  font-size: 1.2rem;
+  font-size: 3rem;
   font-weight: bold;
-  color: #ffccbc;
-  cursor: pointer;
-  transition: 0.3s;
+  color: #2d3436;
+  margin-bottom: 1.5rem;
+  text-shadow: none;
 }
 
-#choices li:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: scale(1.05);
+/* Choices Grid */
+.choices-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+}
+
+.choice-item {
+  background: #fff;
+  border: 3px solid #2d3436;
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2d3436;
+  transition: all 0.2s;
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
+  cursor: default;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.choice-item strong {
+  color: #e17055; /* Orange for labels A, B, C, D */
+  margin-right: 5px;
+}
+
+.choice-item:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* Choice States */
+.choice-item.pending {
+  background: #fff7d1; /* Light Yellow */
+  border-color: #fdcb6e;
+  transform: scale(1.02);
+}
+
+.choice-item.correct {
+  background: #55efc4; /* Mint Green */
+  border-color: #00b894;
   color: #fff;
+  box-shadow: 0 0 15px #55efc4;
+  transform: scale(1.05);
+}
+.choice-item.correct strong {
+  color: #fff;
+}
+
+.choice-item.wrong {
+  background: #ff7675; /* Red */
+  border-color: #d63031;
+  color: #fff;
+  animation: shake 0.5s;
+}
+.choice-item.wrong strong {
+  color: #fff;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 /* Status */
@@ -201,8 +347,8 @@ body::before {
 #final-score {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #76ff03;
-  text-shadow: 0 0 10px #b2ff59;
+  color: #00b894;
+  text-shadow: none;
   margin-top: 1rem;
 }
 
@@ -215,15 +361,6 @@ body::before {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes starDrift {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 1000px 1000px;
   }
 }
 
@@ -246,324 +383,140 @@ body::before {
     font-size: 1.6rem;
   }
 
-  #choices li {
+  .choice-item {
     font-size: 1rem;
   }
 }
-.css-planets {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: -2;
-}
 
-/* Planet Bentuk Bulat */
-.planet {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.2;
-  box-shadow: inset -10px -10px 20px rgba(0, 0, 0, 0.2);
-  animation: floatPlanet 30s ease-in-out infinite;
-}
-
-/* Planet 1 – Biru Neon */
-.planet-a {
-  width: 120px;
-  height: 120px;
-  top: 10%;
-  left: 5%;
-  background: radial-gradient(circle at 30% 30%, #00e5ff, #01579b);
-  animation-delay: 0s;
-}
-
-/* Planet 2 – Oranye Sunset */
-.planet-b {
-  width: 150px;
-  height: 150px;
-  bottom: 10%;
-  right: 5%;
-  background: radial-gradient(circle at 40% 40%, #ffcc80, #e65100);
-  animation-delay: 5s;
-}
-
-/* Planet 3 – Ungu Mistis */
-.planet-c {
-  width: 90px;
-  height: 90px;
-  top: 60%;
-  left: 70%;
-  background: radial-gradient(circle at 40% 40%, #ce93d8, #6a1b9a);
-  animation-delay: 10s;
-}
-
-/* Efek Floating */
-@keyframes floatPlanet {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-15px) scale(1.05);
-  }
-}
-.shooting-stars {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: -3;
-}
-
-.star {
-  position: absolute;
-  width: 2px;
-  height: 100px;
-  background: linear-gradient(transparent, rgba(255, 255, 255, 0.6));
-  border-radius: 50%;
-  opacity: 0;
-  animation: shootStar 5s linear infinite;
-}
-
-/* Bintang jatuh variasi */
-.star:nth-child(1) {
-  top: 10%;
-  left: 80%;
-  animation-delay: 1s;
-}
-.star:nth-child(2) {
-  top: 40%;
-  left: 50%;
-  animation-delay: 3s;
-}
-.star:nth-child(3) {
-  top: 20%;
-  left: 70%;
-  animation-delay: 5s;
-}
-
-/* Animasi bintang jatuh */
-@keyframes shootStar {
-  0% {
-    transform: translate(0, 0) rotate(45deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-800px, 800px) rotate(45deg);
-    opacity: 0;
-  }
-}
+/* Removed Space Elements */
+.css-planets,
+.shooting-stars,
 .rocket-path {
+  display: none;
+}
+
+/* Loading Overlay (New) */
+.loading-overlay {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* Gaya umum roket */
-.rocket {
-  position: absolute;
-  font-size: 2.5rem;
-  transform: rotate(45deg); /* arah diagonal */
-  animation: flyDiagonal 15s linear infinite;
-  opacity: 0.85;
-}
-.rocket::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: -5px;
-  width: 6px;
-  height: 40px;
-  background: linear-gradient(to top, rgba(255, 87, 34, 0.8), transparent);
-  border-radius: 50%;
-  transform: rotate(-45deg);
-  animation: flameFlicker 0.3s infinite alternate;
-  z-index: -1;
-  filter: blur(1px);
-}
-
-/* Roket 1 */
-.rocket-1 {
-  bottom: -60px;
-  left: -60px;
-  animation-delay: 0s;
-}
-
-/* Roket 2 */
-.rocket-2 {
-  bottom: -80px;
-  left: 10%;
-  animation-delay: 6s;
-  font-size: 2.2rem;
-  transform: rotate(50deg);
-}
-
-/* Roket 3 */
-.rocket-3 {
-  bottom: -100px;
-  left: -40px;
-  animation-delay: 12s;
-  font-size: 2rem;
-  transform: rotate(40deg);
-}
-
-/* Animasi diagonal naik ke kanan atas */
-@keyframes flyDiagonal {
-  0% {
-    transform: translate(0, 0) rotate(45deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  50% {
-    transform: translate(60vw, -60vh) rotate(45deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(120vw, -120vh) rotate(45deg);
-    opacity: 0;
-  }
-}
-@keyframes flameFlicker {
-  0% {
-    height: 40px;
-    opacity: 0.9;
-  }
-  100% {
-    height: 50px;
-    opacity: 0.4;
-  }
-}
-
-#popup-feedback {
-  display: block; /* Supaya transition jalan, pakai block saja dari awal */
-  position: fixed;
-  top: 3%;
-  left: 50%;
-  transform: translate(-50%, -80px);
-  min-width: 180px;
-  padding: 1.2rem 2.2rem;
-  border-radius: 1.3rem;
-  background: rgba(0, 229, 255, 0.95);
-  color: #fff;
-  font-size: 1.7rem;
-  font-family: "Orbitron", sans-serif;
-  font-weight: bold;
-  text-align: center;
+  background: #f8f9fa;
   z-index: 9999;
-  box-shadow: 0 0 40px #00e5ff, 0 0 100px #7c4dff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #2d3436;
+  font-size: 1.5rem;
+  font-family: "Fredoka", sans-serif;
+  transition: opacity 0.5s ease;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #dfe6e9;
+  border-top: 5px solid #0984e3;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-overlay.fade-out {
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s, transform 0.35s cubic-bezier(0.3, 1.3, 0.5, 1);
+}
+
+/* Popup Feedback */
+#popup-feedback {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  padding: 15px 30px;
+  border-radius: 50px;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  z-index: 2000;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  border: 3px solid #fff;
+  background: #00b894;
+  opacity: 1;
   pointer-events: none;
-  /* hide di luar layar via opacity dan transform */
 }
 
 #popup-feedback.show {
-  opacity: 1;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, -50%) scale(1);
   pointer-events: auto;
 }
 
+/* Handsign Images */
 .handsign-row {
   display: flex;
   justify-content: center;
-  gap: 32px;
-  margin: 32px 0 16px 0;
+  gap: 20px;
+  margin: 20px 0;
   flex-wrap: wrap;
 }
 
 .handsign-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.15s;
-  background: #fff3;
-  padding: 12px 20px;
-  border-radius: 18px;
-  box-shadow: 0 2px 10px #0002;
+  text-align: center;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  transition: transform 0.2s;
 }
 
 .handsign-item:hover {
-  transform: scale(1.1) rotate(-3deg);
-  box-shadow: 0 8px 24px #3332;
-  background: #f1e4ff;
+  transform: scale(1.1);
 }
 
 .handsign-item img {
-  width: 68px;
-  height: 68px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 8px #0002);
-  margin-bottom: 8px;
+  width: 70px;
+  height: 70px;
+  border: 3px solid #2d3436;
+  border-radius: 10px;
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+  background: #fff;
+  padding: 5px;
 }
 
 .handsign-label {
-  font-size: 1.4em;
+  font-size: 1.2rem;
+  color: #2d3436;
+  background: transparent;
+  box-shadow: none;
+  margin-top: 5px;
   font-weight: bold;
-  color: #6431b7;
-  letter-spacing: 2px;
-  background: #f8e7ff;
-  padding: 2px 18px;
-  border-radius: 100px;
-  margin-top: 4px;
-  box-shadow: 0 1px 3px #ccc1;
 }
 
-#camera img,
-#camera video {
-  border-radius: 15px;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-}
-#camera video {
-  border-radius: 15px;
-  box-shadow: 0 0 28px #00e5ff88, 0 0 10px #1e88e588;
-  outline: 2.5px solid #00e5ff55;
-  background: #051030;
-  transition: box-shadow 0.3s;
-  transform: scaleX(-1);
-}
-
-#webcam {
-  transform: scaleX(-1);
-}
-
-.mirror {
-  transform: scaleX(-1);
-}
-
-/* opsional, supaya status kecil di pojok */
-.status {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: #222;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-family: monospace;
-  font-size: 14px;
-  z-index: 999;
-  opacity: 0.9;
-}
-
+/* Camera & Overlay Fixes */
 #camera {
   position: relative;
   width: 100%;
-  max-width: 320px; /* batas maksimum biar gak terlalu besar di desktop */
+  max-width: 320px;
   margin: 0 auto;
+}
+
+#camera video {
+  border-radius: 10px;
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.2);
+  border: 3px solid #2d3436;
+  background: #000;
+  transform: scaleX(-1);
 }
 
 #overlay {
@@ -575,9 +528,179 @@ body::before {
   transform: scaleX(-1);
 }
 
-#camera video,
-#camera canvas {
-  width: 100%;
-  height: auto;
+/* Utility */
+.hidden {
+  display: none !important;
+}
+
+/* Game Choices - Fix Visibility */
+.choices-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.choice-item {
+  background: #fff;
+  border: 3px solid #2d3436;
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2d3436; /* Dark text for visibility */
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.choice-item strong {
+  color: #0984e3;
+}
+
+.choice-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.15);
+}
+
+.choice-item.correct {
+  background: #00b894;
+  color: #fff;
+  border-color: #00b894;
+}
+
+.choice-item.correct strong {
+  color: #fff;
+}
+
+.choice-item.wrong {
+  background: #d63031;
+  color: #fff;
+  border-color: #d63031;
+  animation: shake 0.5s;
+}
+
+.choice-item.wrong strong {
+  color: #fff;
+}
+
+/* Menu Selection Indicators - Fix Missing Signs */
+.option {
+  position: relative;
+  cursor: pointer;
   display: block;
+  margin-bottom: 10px;
+}
+
+.option input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.option span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 20px;
+  background-color: #fff;
+  border: 3px solid #2d3436;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  color: #2d3436;
+  transition: all 0.2s;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+}
+
+.option:hover span {
+  background-color: #f1f2f6;
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.15);
+}
+
+.option input:checked ~ span {
+  background-color: #0984e3;
+  color: white;
+  border-color: #0984e3;
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2);
+  transform: translateY(2px);
+}
+
+/* Responsive Game Layout */
+@media (min-width: 768px) {
+  .game-layout {
+    max-width: 900px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+    margin: 0 auto;
+  }
+
+  .game-layout > h2 {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .game-layout > p {
+    grid-column: 1 / -1;
+    text-align: center;
+  }
+
+  #camera {
+    margin: 0 auto;
+  }
+
+  #question-box {
+    width: 100%;
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Hold Progress Bar */
+.hold-progress-container {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+  overflow: hidden;
+  border: 2px solid #2d3436;
+  z-index: 10;
+}
+
+.hold-bar {
+  width: 0%;
+  height: 100%;
+  background: #00b894;
+  transition: width 0.1s linear;
 }

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fast Math – High Score</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .highscore-table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+        color: #2d3436;
+      }
+      .highscore-table th,
+      .highscore-table td {
+        padding: 10px;
+        border-bottom: 2px solid #2d3436;
+        text-align: center;
+        font-size: 1.2rem;
+      }
+      .highscore-table th {
+        background-color: #dfe6e9;
+        border-bottom: 3px solid #2d3436;
+        font-weight: bold;
+      }
+      .rank-1 {
+        color: #f1c40f; /* Gold */
+        font-weight: bold;
+        text-shadow: 1px 1px 0 #2d3436;
+      }
+      .rank-2 {
+        color: #95a5a6; /* Silver */
+        font-weight: bold;
+        text-shadow: 1px 1px 0 #2d3436;
+      }
+      .rank-3 {
+        color: #e67e22; /* Bronze */
+        font-weight: bold;
+        text-shadow: 1px 1px 0 #2d3436;
+      }
+    </style>
+  </head>
+  <body>
+    <audio
+      id="backsound"
+      src="static/audio/backsound.mp3"
+      autoplay
+      loop
+    ></audio>
+    <script>
+      const audio = document.getElementById("backsound");
+      audio.volume = 0.3;
+
+      // Cek jika ada waktu tersimpan, mulai dari situ
+      let pos = localStorage.getItem("backsoundTime");
+      if (pos) {
+        audio.currentTime = parseFloat(pos);
+      }
+
+      // Simpan waktu berjalan sebelum halaman ditinggalkan
+      setInterval(() => {
+        localStorage.setItem("backsoundTime", audio.currentTime);
+      }, 1000);
+
+      // Untuk browser modern, autoplay kadang butuh user gesture
+      document.addEventListener("click", () => {
+        if (audio.paused) audio.play();
+      });
+    </script>
+
+    <!-- SHOOTING STARS BACKGROUND (Removed) -->
+    <!-- PLANET BACKGROUND (Removed) -->
+    <!-- MULTI ROCKETS (Removed) -->
+
+    <!-- PAGE CONTENT -->
+    <div class="page">
+      <h2 class="title">🏆 Papan Skor Tertinggi</h2>
+
+      <table class="highscore-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Nama</th>
+            <th>Skor</th>
+            <th>Level</th>
+            <th>Operasi</th>
+          </tr>
+        </thead>
+        <tbody id="highscore-body">
+          <!-- Data will be loaded here -->
+          <tr>
+            <td colspan="5">Memuat data...</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="nav-buttons" style="margin-top: 30px">
+        <a href="menu.html" class="btn">Kembali ke Menu</a>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", loadHighScores);
+
+      function loadHighScores() {
+        const tbody = document.getElementById("highscore-body");
+        tbody.innerHTML = "";
+
+        // Ambil data dari localStorage (format: array of objects {name, score, level})
+        let scores = [];
+        try {
+          scores = JSON.parse(localStorage.getItem("fastMathHighScores")) || [];
+        } catch (e) {
+          scores = [];
+        }
+
+        // Sort by score descending
+        scores.sort((a, b) => b.score - a.score);
+
+        // Ambil top 10
+        const topScores = scores.slice(0, 10);
+
+        if (topScores.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="5">Belum ada data skor. Jadilah yang pertama!</td></tr>';
+          return;
+        }
+
+        const opMap = {
+          add: "+",
+          sub: "-",
+          mul: "×",
+          div: "÷",
+        };
+
+        topScores.forEach((item, index) => {
+          const tr = document.createElement("tr");
+          let rankClass = "";
+          if (index === 0) rankClass = "rank-1";
+          if (index === 1) rankClass = "rank-2";
+          if (index === 2) rankClass = "rank-3";
+
+          const opSymbol = opMap[item.operation] || item.operation || "-";
+
+          tr.innerHTML = `
+            <td class="${rankClass}">${index + 1}</td>
+            <td class="${rankClass}">${item.name || "Anonim"}</td>
+            <td class="${rankClass}">${item.score}</td>
+            <td>${item.level || "-"}</td>
+            <td>${opSymbol}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    </script>
+  </body>
+</html>

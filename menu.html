@@ -3,12 +3,67 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fast Math – Pilih Kesulitan</title>
+    <title>Fast Math – Menu Utama</title>
     <link rel="stylesheet" href="style.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap"
       rel="stylesheet"
     />
+    <style>
+      /* Additional styles for the single page menu */
+      .section {
+        display: none;
+        animation: fadeIn 0.5s ease;
+      }
+      .section.active {
+        display: block;
+      }
+      .menu-btn {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+        padding: 15px;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+      .highscore-table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+        color: white;
+      }
+      .highscore-table th,
+      .highscore-table td {
+        padding: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        text-align: center;
+      }
+      .handsign-row {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .handsign-item {
+        text-align: center;
+      }
+      .handsign-item img {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        border: 2px solid #2d3436;
+        box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
+      }
+      .guide-list {
+        text-align: left;
+        margin: 20px 0;
+        padding-left: 20px;
+      }
+      .guide-list li {
+        margin-bottom: 10px;
+      }
+    </style>
   </head>
   <body>
     <audio
@@ -38,60 +93,124 @@
       });
     </script>
 
-    <!-- SHOOTING STARS BACKGROUND -->
-    <div class="shooting-stars">
-      <div class="star"></div>
-      <div class="star"></div>
-      <div class="star"></div>
-    </div>
+    <!-- SHOOTING STARS BACKGROUND (Removed) -->
+    <!-- PLANET BACKGROUND (Removed) -->
+    <!-- MULTI ROCKETS (Removed) -->
 
-    <!-- PLANET BACKGROUND (CSS ONLY) -->
-    <div class="css-planets">
-      <div class="planet planet-a"></div>
-      <div class="planet planet-b"></div>
-      <div class="planet planet-c"></div>
-    </div>
-
-    <!-- MULTI ROCKETS -->
-    <div class="rocket-path">
-      <div class="rocket rocket-1">🚀🚀🚀🚀</div>
-    </div>
-
-    <!-- HALAMAN UTAMA -->
+    <!-- MAIN CONTAINER -->
     <div class="page">
-      <h2 class="title">⚙️ Pilih Tingkat Kesulitan</h2>
-
-      <!-- form pilihan level -->
-      <form id="level-form" class="difficulty">
-        <label class="option">
-          <input type="radio" name="level" value="easy" checked />
-          <span>Mudah</span>
-        </label>
-        <label class="option">
-          <input type="radio" name="level" value="medium" />
-          <span>Sedang</span>
-        </label>
-        <label class="option">
-          <input type="radio" name="level" value="hard" />
-          <span>Sulit</span>
-        </label>
-      </form>
-
-      <!-- tombol navigasi -->
-      <div class="nav-buttons">
-        <a href="guide.html" class="btn">Kembali</a>
-        <button id="play-btn" class="btn pulse">Mulai Game 🚀</button>
+      <!-- SECTION: MAIN MENU -->
+      <div id="main-menu" class="section active">
+        <h2 class="title">🚀 Menu Utama</h2>
+        <button
+          class="btn menu-btn"
+          onclick="showSection('difficulty-section')"
+        >
+          Mulai Game
+        </button>
+        <button class="btn menu-btn" onclick="showSection('guide-section')">
+          Petunjuk
+        </button>
+        <a href="highscore.html" class="btn menu-btn">High Score</a>
+        <a href="index.html" class="btn menu-btn" style="background: #ff4444"
+          >Keluar</a
+        >
       </div>
+
+      <!-- SECTION: DIFFICULTY -->
+      <div id="difficulty-section" class="section">
+        <h2 class="title">⚙️ Pilih Tingkat Kesulitan</h2>
+        <form id="level-form" class="difficulty">
+          <label class="option">
+            <input type="radio" name="level" value="easy" checked />
+            <span>Mudah</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="level" value="medium" />
+            <span>Sedang</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="level" value="hard" />
+            <span>Sulit</span>
+          </label>
+        </form>
+        <div class="nav-buttons">
+          <button class="btn" onclick="showSection('main-menu')">
+            Kembali
+          </button>
+          <button id="play-btn" class="btn pulse">Mulai 🚀</button>
+        </div>
+      </div>
+
+      <!-- SECTION: GUIDE -->
+      <div id="guide-section" class="section">
+        <h2 class="title">📖 Cara Bermain</h2>
+        <ol class="guide-list">
+          <li>
+            Pilih tingkat kesulitan: <strong>Mudah, Sedang, atau Sulit</strong>.
+          </li>
+          <li>
+            Soal penjumlahan akan muncul bersama empat pilihan jawaban
+            <em>(A / B / C / D)</em>.
+          </li>
+          <li>Jawab dengan <strong>handsign</strong> di depan kamera.</li>
+          <li>
+            Permainan berlangsung <strong>1 menit</strong>. Usahakan jawab
+            sebanyak-banyaknya!
+          </li>
+          <li>
+            Skor = jumlah jawaban benar. Skor akhir akan tampil setelah waktu
+            habis.
+          </li>
+        </ol>
+
+        <!-- Handsign Display -->
+        <div class="handsign-row">
+          <div class="handsign-item">
+            <img src="static/img/handsign_A.png" alt="Handsign A" />
+            <div class="handsign-label">A</div>
+          </div>
+          <div class="handsign-item">
+            <img src="static/img/handsign_B.png" alt="Handsign B" />
+            <div class="handsign-label">B</div>
+          </div>
+          <div class="handsign-item">
+            <img src="static/img/handsign_C.png" alt="Handsign C" />
+            <div class="handsign-label">C</div>
+          </div>
+          <div class="handsign-item">
+            <img src="static/img/handsign_D.png" alt="Handsign D" />
+            <div class="handsign-label">D</div>
+          </div>
+        </div>
+
+        <div class="nav-buttons" style="margin-top: 20px">
+          <button class="btn" onclick="showSection('main-menu')">
+            Kembali
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION: HIGH SCORE (Removed) -->
     </div>
 
     <script>
+      // Navigation Logic
+      function showSection(sectionId) {
+        document
+          .querySelectorAll(".section")
+          .forEach((el) => el.classList.remove("active"));
+        document.getElementById(sectionId).classList.add("active");
+      }
+
+      // Play Button Logic
       document.getElementById("play-btn").addEventListener("click", (e) => {
         e.preventDefault();
         const level = document.querySelector(
           "input[name='level']:checked"
         ).value;
         localStorage.level = level;
-        window.location.href = "operation.html"; // ubah dari /game ke /operation
+        window.location.href = "operation.html";
       });
     </script>
   </body>
