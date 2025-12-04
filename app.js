@@ -165,7 +165,7 @@ function generateQuestion() {
 /*****************
  *     TIMER     *
  *****************/
-const timePerLevel = { easy: 60, medium: 120, hard: 180 }; // 1–3 menit
+const timePerLevel = { easy: 60, medium: 60, hard: 60 }; // 1 menit
 timeLeft = timePerLevel[level] ?? 60; // ganti nilai awal
 timeEl.textContent = timeLeft;
 
