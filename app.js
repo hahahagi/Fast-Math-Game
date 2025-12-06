@@ -93,72 +93,126 @@ function generateQuestion() {
     if (el) el.className = "choice-item";
   });
 
+  // Konfigurasi Level yang Lebih Optimal
   const cfg = {
-    easy: { max: 30, mulMin: 2, mulMax: 10, answerMin: 1, answerMax: 50 },
-    medium: { max: 100, mulMin: 3, mulMax: 15, answerMin: 10, answerMax: 200 },
-    hard: { max: 200, mulMin: 5, mulMax: 25, answerMin: 50, answerMax: 1000 },
+    easy: {
+      addMax: 20,
+      subMax: 20,
+      mulMin: 2,
+      mulMax: 9,
+      divMin: 2,
+      divMax: 5,
+      ansMin: 1,
+      ansMax: 50,
+    },
+    medium: {
+      addMax: 50,
+      subMax: 50,
+      mulMin: 3,
+      mulMax: 12,
+      divMin: 3,
+      divMax: 9,
+      ansMin: 5,
+      ansMax: 150,
+    },
+    hard: {
+      addMax: 100,
+      subMax: 100,
+      mulMin: 6,
+      mulMax: 15,
+      divMin: 4,
+      divMax: 12,
+      ansMin: 10,
+      ansMax: 300,
+    },
   }[level];
 
   let a, b, op, correct;
-  while (true) {
+  let attempts = 0;
+
+  // Loop safety agar tidak hang (maks 50x coba)
+  while (attempts < 50) {
+    attempts++;
     op = opSet();
-    switch (op) {
-      case "+":
-        a = r(cfg.max);
-        b = r(cfg.max);
-        correct = a + b;
-        break;
-      case "-":
-        a = r(cfg.max);
-        b = r(a);
-        correct = a - b;
-        break;
-      case "×":
-        b = rr(cfg.mulMin, cfg.mulMax);
-        a = r(cfg.max / b);
-        correct = a * b;
-        break;
-      case "÷":
-        b = rr(cfg.mulMin, cfg.mulMax);
-        correct = r(cfg.max / b);
-        a = correct * b;
-        break;
+
+    if (op === "+") {
+      a = rr(5, cfg.addMax);
+      b = rr(5, cfg.addMax);
+      correct = a + b;
+    } else if (op === "-") {
+      a = rr(10, cfg.subMax * 1.5);
+      b = rr(5, a - 1);
+      correct = a - b;
+    } else if (op === "×") {
+      a = rr(cfg.mulMin, cfg.mulMax);
+      b = rr(cfg.mulMin, cfg.mulMax);
+      correct = a * b;
+    } else if (op === "÷") {
+      // Tentukan pembagi (b) dan hasil (correct) dulu agar angka bulat
+      b = rr(cfg.divMin, cfg.divMax);
+
+      // Batasi hasil bagi agar 'a' tidak terlalu raksasa
+      let qMin = level === "hard" ? 5 : 2;
+      let qMax = level === "hard" ? 30 : 10;
+
+      correct = rr(qMin, qMax);
+      a = correct * b;
     }
-    if (v(correct, cfg)) break;
+
+    // Validasi range jawaban
+    if (correct >= cfg.ansMin && correct <= cfg.ansMax) {
+      break;
+    }
+
+    // Fallback jika susah cari angka pas (safety net)
+    if (attempts >= 50) {
+      if (op === "÷") {
+        correct = 10;
+        b = 5;
+        a = 50;
+      } else {
+        a = 10;
+        b = 10;
+        correct = 20;
+        op = "+";
+      }
+    }
   }
-  const answers = [correct, ...fake(correct, cfg)];
-  shuffle(answers).forEach((ans, i) => {
+
+  // Generate Pilihan Jawaban (Distractors)
+  const answers = new Set([correct]);
+
+  // Logic pengecoh yang lebih cerdas (dekat dengan jawaban asli)
+  while (answers.size < 4) {
+    let offset = rr(1, 10); // default deviasi kecil
+    if (level === "medium") offset = rr(1, 15);
+    if (level === "hard") offset = rr(1, 25);
+
+    // 50% kemungkinan plus atau minus
+    if (Math.random() < 0.5) offset *= -1;
+
+    let fake = correct + offset;
+
+    // Pastikan jawaban positif dan tidak duplikat
+    if (fake > 0 && fake !== correct) {
+      answers.add(fake);
+    }
+  }
+
+  // Acak posisi jawaban
+  const shuffled = [...answers].sort(() => Math.random() - 0.5);
+
+  shuffled.forEach((ans, i) => {
     const key = ["a", "b", "c", "d"][i];
     choices[key].textContent = ans;
     if (ans === correct) currentAnswer = key;
   });
+
   questionEl.textContent = `${a} ${op} ${b} = ?`;
 
-  function r(m) {
-    return Math.floor(Math.random() * m) + 1;
-  }
+  // Helper Random Range
   function rr(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  function v(val, c) {
-    return val >= c.answerMin && val <= c.answerMax && Number.isInteger(val);
-  }
-  function fake(corr, c) {
-    const set = new Set(),
-      noise = level === "easy" ? 5 : level === "medium" ? 20 : 100;
-    while (set.size < 3) {
-      let dev = r(noise) * (Math.random() < 0.5 ? -1 : 1);
-      const f = corr + dev;
-      if (f !== corr && v(f, c)) set.add(f);
-    }
-    return [...set];
-  }
-  function shuffle(a) {
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = (Math.random() * (i + 1)) >> 0;
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
   }
 }
 
